@@ -12,12 +12,30 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      mobile: MobileLogin(),
-      tablet: TabletLogin(),
-      desktop: DesktopLogin(),
+      mobile: MobileLogin(
+        emailController: emailController,
+        passwordController: passwordController,
+      ),
+      tablet: TabletLogin(
+        emailController: emailController,
+        passwordController: passwordController,
+      ),
+      desktop: DesktopLogin(
+        emailController: emailController,
+        passwordController: passwordController,
+      ),
     );
   }
 }

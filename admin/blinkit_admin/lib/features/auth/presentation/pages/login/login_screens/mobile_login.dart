@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MobileLogin extends StatefulWidget {
-  const MobileLogin({super.key});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const MobileLogin({
+    required this.emailController,
+    required this.passwordController,
+    super.key});
 
   @override
   State<MobileLogin> createState() => _MobileLoginState();

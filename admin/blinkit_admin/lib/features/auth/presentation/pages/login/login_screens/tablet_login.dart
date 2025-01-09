@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TabletLogin extends StatefulWidget {
-  const TabletLogin({super.key});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  const TabletLogin({
+    required this.emailController,
+    required this.passwordController,
+    super.key});
 
   @override
   State<TabletLogin> createState() => _TabletLoginState();
