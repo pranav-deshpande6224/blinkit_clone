@@ -1,6 +1,11 @@
+import 'package:blinkit_admin/core/constants/constant_strings.dart';
+import 'package:blinkit_admin/core/reusable_widgets/reusable_expanded.dart';
+import 'package:blinkit_admin/features/auth/presentation/cubit/password_cubit.dart';
 import 'package:blinkit_admin/features/auth/presentation/widgets/auth_button.dart';
 import 'package:blinkit_admin/features/auth/presentation/widgets/auth_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DesktopLogin extends StatefulWidget {
   final TextEditingController emailController;
@@ -16,6 +21,7 @@ class DesktopLogin extends StatefulWidget {
 
 class _DesktopLoginState extends State<DesktopLogin> {
   final _loginFormKey = GlobalKey<FormState>();
+  final String emailRegExp = Constantstrings.emailRegEx;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,20 +29,17 @@ class _DesktopLoginState extends State<DesktopLogin> {
         children: [
           Expanded(
             flex: 6,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.white12, Colors.amber],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
+            child: Image.asset(
+              height: double.infinity,
+              Constantstrings.blinkitLogo,
+              fit: BoxFit.fill,
             ),
           ),
           Expanded(
             flex: 4,
             child: Container(
               decoration: BoxDecoration(
+                color: Colors.grey[200],
                 border: Border(
                   left: BorderSide(
                     color: Colors.grey,
@@ -46,7 +49,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
               ),
               child: Column(
                 children: [
-                  Expanded(flex: 1, child: SizedBox()),
+                  reusableExpanded(child: SizedBox()),
                   Expanded(
                     flex: 8,
                     child: Form(
@@ -56,7 +59,6 @@ class _DesktopLoginState extends State<DesktopLogin> {
                         child: Center(
                           child: SizedBox(
                             width: 400,
-                            height: 400,
                             child: Column(
                               spacing: 25,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +67,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Welcome Back",
+                                      Constantstrings.welcome,
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineLarge,
@@ -74,7 +76,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Login to your account",
+                                     Constantstrings.loginAccount,
                                     ),
                                   ],
                                 ),
@@ -82,16 +84,65 @@ class _DesktopLoginState extends State<DesktopLogin> {
                                   hintText: "Email",
                                   controller: widget.emailController,
                                   prefixIcon: Icons.email,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return "Email is required";
+                                    }
+                                    if (!RegExp(emailRegExp).hasMatch(value)) {
+                                      return "Enter a valid email";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                AuthTextFormField(
-                                  hintText: "Password",
-                                  controller: widget.passwordController,
-                                  isObscure: true,
-                                  prefixIcon: Icons.lock,
-                                  suffixIcon: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.visibility_off),
-                                  ),
+                                Column(
+                                  children: [
+                                    BlocBuilder<PasswordCubit, bool>(
+                                      builder: (context, state) {
+                                        return AuthTextFormField(
+                                          hintText: "Password",
+                                          controller: widget.passwordController,
+                                          isObscure: !state ? true : false,
+                                          prefixIcon: Icons.lock,
+                                          suffixIcon: IconButton(
+                                            onPressed: () {
+                                              context
+                                                  .read<PasswordCubit>()
+                                                  .changePasswordVisibility();
+                                            },
+                                            icon: Icon(!state
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
+                                              return "Password is required";
+                                            }
+                                            return null;
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Spacer(),
+                                        TextButton(
+                                          onPressed: () {
+                                            context.pushNamed('fp');
+                                          },
+                                          child: Text(
+                                            "Forgot Password?",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
                                 SizedBox(
                                   height: 50,
@@ -102,50 +153,69 @@ class _DesktopLoginState extends State<DesktopLogin> {
                                   ),
                                 ),
                                 SizedBox(
-                                    height: 50,
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      style: Theme.of(context)
-                                          .elevatedButtonTheme
-                                          .style!
-                                          .copyWith(
-                                            shape: WidgetStateProperty.all(
-                                              RoundedRectangleBorder(
-                                                side: BorderSide(
-                                                  width: 0.5,
-                                                  color: Colors.blueGrey,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: Theme.of(context)
+                                        .elevatedButtonTheme
+                                        .style!
+                                        .copyWith(
+                                          shape: WidgetStateProperty.all(
+                                            RoundedRectangleBorder(
+                                              side: BorderSide(
+                                                width: 0.5,
+                                                color: Colors.blueGrey,
                                               ),
-                                            ),
-                                            backgroundColor:
-                                                WidgetStateProperty.all(
-                                              Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                             ),
                                           ),
-                                      onPressed: () {},
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/google.png",
-                                            height: 40,
-                                            width: 40,
+                                          backgroundColor:
+                                              WidgetStateProperty.all(
+                                            Colors.white,
                                           ),
-                                          SizedBox(
-                                            width: 5,
+                                        ),
+                                    onPressed: () {},
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/google.png",
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Continue with Google",
+                                          style: TextStyle(
+                                            color: Colors.black,
                                           ),
-                                          Text(
-                                            "Continue with Google",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Don\'t have an account?'),
+                                    TextButton(
+                                      onPressed: () {
+                                        context.pushNamed('signup');
+                                      },
+                                      child: Text(
+                                        'Sign up',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                        ),
                                       ),
-                                    )),
+                                    )
+                                  ],
+                                )
                               ],
                             ),
                           ),
@@ -153,7 +223,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
                       ),
                     ),
                   ),
-                  Expanded(flex: 1, child: SizedBox()),
+                  reusableExpanded(child: SizedBox())
                 ],
               ),
             ),

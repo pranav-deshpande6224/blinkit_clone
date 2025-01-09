@@ -6,11 +6,13 @@ class AuthTextFormField extends StatelessWidget {
   final IconData prefixIcon;
   final IconButton? suffixIcon;
   final bool isObscure;
+  final String? Function(String?)? validator;
   const AuthTextFormField({
     required this.controller,
     required this.hintText,
     this.isObscure = false,
     this.suffixIcon,
+    required this.validator,
     required this.prefixIcon,
     super.key,
   });
@@ -20,7 +22,8 @@ class AuthTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: isObscure,
-      cursorColor: Colors.green,
+      cursorColor: Colors.black,
+      validator: validator,
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: Icon(prefixIcon),

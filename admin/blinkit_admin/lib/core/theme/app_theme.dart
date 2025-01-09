@@ -25,8 +25,8 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.yellow,
-        foregroundColor: Colors.black,
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         textStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
@@ -38,7 +38,7 @@ class AppTheme {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: Colors.blue,
+        foregroundColor: Colors.green[700],
         textStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
