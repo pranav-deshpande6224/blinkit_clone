@@ -28,9 +28,22 @@ class _DesktopSignupState extends State<DesktopSignup> {
   bool isPasswordContainUppercase = false;
   bool isPasswordCOntainNumber = false;
   bool isPasswordContainSpecialChar = false;
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+  final _nameFocusNode = FocusNode();
   final RegExp uppercaseRegExp = RegExp(r'[A-Z]');
   final RegExp numberRegExp = RegExp(r'[0-9]');
   final RegExp specialCharacterRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    _nameFocusNode.dispose();
+    super.dispose();
+  }
 
   void changeStateOfPassword(String value) {
     setState(() {
@@ -210,6 +223,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         AuthTextFormField(
+                          focusNode: _nameFocusNode,
                           controller: widget.nameController,
                           hintText: "Name",
                           validator: (value) {
@@ -224,6 +238,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
                           prefixIcon: Icons.person,
                         ),
                         AuthTextFormField(
+                          focusNode: _emailFocusNode,
                           controller: widget.emailController,
                           hintText: "Email",
                           validator: (value) {
@@ -239,6 +254,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
                           prefixIcon: Icons.email,
                         ),
                         AuthTextFormField(
+                          focusNode: _passwordFocusNode,
                           controller: widget.passwordController,
                           hintText: 'Password',
                           onChanged: (p0) {
@@ -276,6 +292,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
                         ),
                         strongPassword(),
                         AuthTextFormField(
+                          focusNode: _confirmPasswordFocusNode,
                           controller: widget.confirmPasswordController,
                           hintText: 'Confirm Password',
                           validator: (value) {

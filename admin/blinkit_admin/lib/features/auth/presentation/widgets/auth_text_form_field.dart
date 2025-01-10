@@ -8,6 +8,7 @@ class AuthTextFormField extends StatelessWidget {
   final bool isObscure;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final FocusNode focusNode;
   const AuthTextFormField({
     required this.controller,
     required this.hintText,
@@ -16,6 +17,7 @@ class AuthTextFormField extends StatelessWidget {
     required this.validator,
     required this.prefixIcon,
     this.onChanged,
+    required this.focusNode,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class AuthTextFormField extends StatelessWidget {
         maxWidth: 400
       ),
       child: TextFormField(
+        focusNode: focusNode,
         controller: controller,
         obscureText: isObscure,
         onChanged: onChanged,

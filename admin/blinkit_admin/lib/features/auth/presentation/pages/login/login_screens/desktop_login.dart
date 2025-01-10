@@ -18,9 +18,17 @@ class DesktopLogin extends StatefulWidget {
 }
 
 class _DesktopLoginState extends State<DesktopLogin> {
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
   final _loginFormKey = GlobalKey<FormState>();
   final String emailRegExp = Constantstrings.emailRegEx;
   bool passswordVisible = false;
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +85,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
                             ),
                             AuthTextFormField(
                               hintText: "Email",
+                              focusNode: _emailFocusNode,
                               controller: widget.emailController,
                               prefixIcon: Icons.email,
                               validator: (value) {
@@ -93,6 +102,7 @@ class _DesktopLoginState extends State<DesktopLogin> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 AuthTextFormField(
+                                  focusNode: _passwordFocusNode,
                                   hintText: "Password",
                                   controller: widget.passwordController,
                                   isObscure: !passswordVisible,
