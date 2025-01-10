@@ -7,6 +7,7 @@ class AuthTextFormField extends StatelessWidget {
   final IconButton? suffixIcon;
   final bool isObscure;
   final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
   const AuthTextFormField({
     required this.controller,
     required this.hintText,
@@ -14,6 +15,7 @@ class AuthTextFormField extends StatelessWidget {
     this.suffixIcon,
     required this.validator,
     required this.prefixIcon,
+    this.onChanged,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class AuthTextFormField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         obscureText: isObscure,
+        onChanged: onChanged,
         cursorColor: Colors.black,
         validator: validator,
         decoration: InputDecoration(

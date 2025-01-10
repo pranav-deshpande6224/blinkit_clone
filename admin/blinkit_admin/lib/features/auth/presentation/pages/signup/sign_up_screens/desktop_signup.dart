@@ -8,6 +8,7 @@ class DesktopSignup extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final TextEditingController nameController;
+
   const DesktopSignup(
       {required this.emailController,
       required this.passwordController,
@@ -23,6 +24,159 @@ class _DesktopSignupState extends State<DesktopSignup> {
   final _signupFormKey = GlobalKey<FormState>();
   bool passswordVisible = false;
   bool confirmPasswordVisible = false;
+  bool isPasswordContainEightChar = false;
+  bool isPasswordContainUppercase = false;
+  bool isPasswordCOntainNumber = false;
+  bool isPasswordContainSpecialChar = false;
+  final RegExp uppercaseRegExp = RegExp(r'[A-Z]');
+  final RegExp numberRegExp = RegExp(r'[0-9]');
+  final RegExp specialCharacterRegExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+
+  void changeStateOfPassword(String value) {
+    setState(() {
+      isPasswordContainEightChar = value.length >= 8;
+      isPasswordContainUppercase = uppercaseRegExp.hasMatch(value);
+      isPasswordCOntainNumber = numberRegExp.hasMatch(value);
+      isPasswordContainSpecialChar = specialCharacterRegExp.hasMatch(value);
+    });
+  }
+
+  Widget strongPassword() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: isPasswordContainEightChar
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 18,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Contain Atleast 8 Characters!',
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: isPasswordContainUppercase
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 18,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Contain 1 Uppercase Letter',
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: isPasswordCOntainNumber
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 18,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Contain 1 Number',
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Center(
+                child: isPasswordContainSpecialChar
+                    ? const Icon(
+                        Icons.check_circle_rounded,
+                        color: Colors.green,
+                        size: 18,
+                      )
+                    : null,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Contain 1 Special Character',
+            )
+          ],
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +195,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
           child: SizedBox(
             width: 400,
             child: Card(
-              color: Colors.grey[100],
+              color: Colors.grey[180],
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: SingleChildScrollView(
@@ -87,9 +241,21 @@ class _DesktopSignupState extends State<DesktopSignup> {
                         AuthTextFormField(
                           controller: widget.passwordController,
                           hintText: 'Password',
+                          onChanged: (p0) {
+                            changeStateOfPassword(p0);
+                          },
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Password is Required';
+                              return 'Please enter Password';
+                            } else if (value.trim().length < 8) {
+                              return 'Password must contain atleast 8 characters';
+                            } else if (!uppercaseRegExp.hasMatch(value)) {
+                              return 'Password should be atleast 1 uppercase character';
+                            } else if (!numberRegExp.hasMatch(value)) {
+                              return 'Password should be atleast 1 Number';
+                            } else if (!specialCharacterRegExp
+                                .hasMatch(value)) {
+                              return 'Password should be atleast 1 Special Character';
                             }
                             return null;
                           },
@@ -108,15 +274,16 @@ class _DesktopSignupState extends State<DesktopSignup> {
                             ),
                           ),
                         ),
+                        strongPassword(),
                         AuthTextFormField(
                           controller: widget.confirmPasswordController,
                           hintText: 'Confirm Password',
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Confirm Password is Required';
+                              return 'Please enter Confirm Password';
                             }
                             if (value != widget.passwordController.text) {
-                              return 'Passwords do not match';
+                              return 'Password does not match';
                             }
                             return null;
                           },
@@ -140,7 +307,11 @@ class _DesktopSignupState extends State<DesktopSignup> {
                           height: 50,
                           width: double.infinity,
                           child: AuthButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (!_signupFormKey.currentState!.validate()) {
+                                return;
+                              }
+                            },
                             widget: Text('Sign Up'),
                           ),
                         ),

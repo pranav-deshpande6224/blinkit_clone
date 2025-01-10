@@ -140,7 +140,11 @@ class _DesktopLoginState extends State<DesktopLogin> {
                               height: 50,
                               child: AuthButton(
                                 widget: Text('Login'),
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (!_loginFormKey.currentState!.validate()) {
+                                    return;
+                                  }
+                                },
                               ),
                             ),
                             SizedBox(
