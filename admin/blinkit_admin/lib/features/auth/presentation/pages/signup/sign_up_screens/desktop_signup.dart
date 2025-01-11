@@ -1,6 +1,7 @@
 import 'package:blinkit_admin/core/constants/constant_strings.dart';
 import 'package:blinkit_admin/features/auth/presentation/widgets/auth_button.dart';
 import 'package:blinkit_admin/features/auth/presentation/widgets/auth_text_form_field.dart';
+import 'package:blinkit_admin/features/auth/presentation/widgets/gradient_container.dart';
 import 'package:flutter/material.dart';
 
 class DesktopSignup extends StatefulWidget {
@@ -193,17 +194,7 @@ class _DesktopSignupState extends State<DesktopSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white,
-              Colors.yellow.shade300,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      body: GradientContainer(
         child: Center(
           child: SizedBox(
             width: 400,
